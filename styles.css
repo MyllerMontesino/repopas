@@ -1,0 +1,463 @@
+/* Configuración base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8fafc;
+  color: #333;
+}
+/* Contenedor del switch (alineación a la derecha) */
+.card-header {
+  display: flex; /* Activar flexbox */
+  justify-content: space-between; /* Espacio entre el título y el switch */
+  align-items: center; /* Alinear verticalmente el contenido */
+}
+
+/* Estilos generales para el switch */
+.switch {
+  font-size: 17px; /* Tamaño de fuente */
+  position: relative;
+  display: inline-block;
+  width: 4em; /* Ancho del switch */
+  height: 2em; /* Altura del switch */
+  margin-left: auto; /* Empujar el switch hacia la derecha */
+}
+
+/* Ocultar el input del switch */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Estilo del slider (parte visible del switch) */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #b7b7b7; /* Color de fondo predeterminado */
+  transition: 0.4s; /* Suavizado de transiciones */
+  border-radius: 30px; /* Bordes redondeados */
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2); /* Sombra interior */
+}
+
+/* Estilo del círculo interior del slider */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.6em;
+  width: 1.6em;
+  border-radius: 20px; /* Bordes redondeados */
+  left: 0.2em; /* Separación izquierda */
+  bottom: 0.2em; /* Separación inferior */
+  background-color: white; /* Color del círculo */
+  transition: 0.4s; /* Suavizado de movimiento */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra del círculo */
+}
+
+/* Cambio de fondo cuando el switch está activo */
+.switch input:checked + .slider {
+  background-color: #1bcb00; /* Verde encendido */
+}
+
+/* Sombra de enfoque en el slider */
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px #9a9999; /* Sombra gris */
+}
+
+/* Movimiento y color del círculo cuando está activo */
+.switch input:checked + .slider:before {
+  transform: translateX(2em); /* Mover círculo hacia la derecha */
+  background-color: #b3f9b8; /* Color del círculo activo */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra del círculo activo */
+}
+
+/* Estilos para los textos ON/OFF dentro del slider */
+.slider:after {
+  content: "OFF"; /* Texto predeterminado */
+  color: rgb(255, 255, 255); /* Color del texto */
+  position: absolute;
+  right: 0.5em; /* Posición del texto OFF */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em; /* Tamaño de fuente */
+  transition: opacity 0.4s; /* Suavizado de transición */
+  opacity: 1; /* Mostrar texto OFF */
+}
+
+/* Texto ON cuando el switch está activo */
+.switch input:checked + .slider:after {
+  content: "ON"; /* Cambiar texto a ON */
+  left: 0.5em; /* Posición del texto ON */
+  right: auto; /* Anular posición derecha */
+  opacity: 1; /* Mostrar texto ON */
+}
+
+header {
+  background-color: #edf1f1;
+  border-bottom: 1px solid #ddd;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center; 
+  align-items: center;             
+  text-align: center; 
+}
+
+.header img {
+  margin-right: 10px; 
+  width: 65px; 
+  height: auto; 
+}
+
+.header h1 {
+  font-size: 2.5em; 
+  margin: 0; 
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 2rem;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mostrar {
+  display: flex;
+  justify-content: center;  
+  align-items: center;                
+}
+
+/* Estilo de las tarjetas */
+.card {
+  background-color: #fff;
+  border: 2px solid black;
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: 48%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card.full-width {
+  width: 100%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.card p {
+  margin: 0.5rem 0 1rem;
+  color: #555;
+}
+
+.schedule {
+  margin-top: 1rem;
+}
+
+.schedule h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.config-btn {
+  background-color: #000000;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+
+.config-btn:hover {
+  background-color: #150c53;
+}
+
+.time-inputs {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+.time-inputs div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+input[type="time"] {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.btnmostrar, .btnbuscar{
+  text-align: center;
+  padding: 0.75em;
+  font-size: 1em;
+  color: white;
+  background-color: #000e1c;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 8px;
+}
+
+/* Estilos para los botones dentro de la configuración */
+.schedule {
+  display: flex;
+  justify-content: center;
+  gap: 15px;  /* Espacio entre los botones */
+  margin-top: 20px;
+}
+
+.btn {
+  background-color: #000e1c;
+  color: white;
+  padding: 0.75em;
+  margin-bottom: 2px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.btn:hover,.btnmostrar:hover, .btnbuscar:hover{
+  background-color: #054955;
+}
+
+#filtroFechaForm {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 10px; 
+  width: 100%; 
+  max-width: 500px; 
+  margin: 0 auto; 
+}
+
+#filtroFechaForm label,
+#filtroFechaForm input {
+  width: 100%; 
+  text-align: center; 
+}
+
+#filtroFechaForm input {
+  padding: 10px;
+  margin-top: 5px;
+}
+
+
+#registros-container {
+  width: 85%;
+  height: 500px; 
+  overflow-y: auto; 
+  border: 2px solid black;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  padding: 1.5rem;
+  background-color: #fff ;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid black;
+}
+
+th, td {
+  padding: 8px 12px;
+  border: 1px solid #131212;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f1f1;
+  font-weight: bold;    
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+  
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: black;
+  border-top: 1px solid #ddd;
+  color: white;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 708px) {
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+  }
+}
+@media (min-width: 708px) {
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+  }
+}
+
+@media (min-width:708px) {
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+  }
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .card {
+    width: 100%;
+  }
+  .schedule h3 {
+    font-size: 1rem;
+  }
+
+  
+  .time-inputs {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: auto;
+    margin-top: 0.rem;
+    padding: 0.8em;
+    width: 100%;
+  }
+}
+#dateRange {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+/* Estilos para el modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  margin-top: 8rem !important;
+
+  margin: auto;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.modal-header {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+.modal-body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.modal-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-close {
+  background-color: #c50505;
+  color: white;
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.notification {
+  background-color: #dff0d8;
+  color: #3c763d;
+  padding: 10px;
+  border: 1px solid #d6e9c6;
+  border-radius: 5px;
+  margin-top: 10px;
+  position: relative;
+}
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.btn {
+  background-color: rgb(0, 10, 17);
+}
+
+
+

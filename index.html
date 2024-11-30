@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Flatpickr CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+  <!-- Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <title>Control IoT</title>
+  <link rel="stylesheet" href="styles.css">
+ 
+</head>
+<body>
+  <header class="header">
+    <img src="https://i.gifer.com/7S99.gif">
+    <h1>Control IoT</h1>
+  </header>
+
+
+  <main class="container">
+    <section class="card">
+      <div class="card-header">
+        <h2>LUCES</h2>
+        <label class="switch">
+          <input type="checkbox" id="lucesSwitch">
+          <span class="slider"></span>
+        </label>
+        <span class="switch-label" id="switchLabel"></span>
+      </div>
+      <p>Activa o desactiva las Luces.</p>
+      <h3>Configuración</h3>
+      <div class="schedule">
+        
+        <button class="btn" id="programarEncendidoBtn">Programar Encendido</button>
+        <button class="btn" id="programarApagadoBtn">Programar Apagado</button>
+      </div>
+    
+      <!-- Mensajes de configuración -->
+      <div id="encendidoMessage" style="display: none; margin-top: 20px;">
+        <p><strong>Configuración de encendido guardada con éxito.</strong></p>
+        <div id="encendidoDetails"></div>
+        <button class="btn" id="eliminarEncendidoBtn">Eliminar Configuración de Encendido</button>
+      </div>
+    
+      <div id="apagadoMessage" style="display: none; margin-top: 20px;">
+        <p><strong>Configuración de apagado guardada con éxito.</strong></p>
+        <div id="apagadoDetails"></div>
+        <button class="btn" id="eliminarApagadoBtn">Eliminar Configuración de Apagado</button>
+      </div>
+    
+      <!-- Modal de configuración -->
+      <div class="modal" id="modal-config">
+        <div class="modal-content">
+          <h3 id="modalTitle">Configurar Hora y Rango de Fechas</h3>
+          <label for="hora">Hora:</label>
+          <input type="time" id="hora">
+    
+          <div class="calendar-container">
+            <h4>Seleccionar Rango de Fechas (opcional)</h4>
+            <input type="text" id="calendar" placeholder="Selecciona un rango de fechas">
+          </div>
+    
+          <div class="modal-footer">
+            <button class="btn" id="guardarConfigBtn">Guardar Configuración</button>
+            <button class="btn" id="closeModalBtn">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Incluye flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <script>
+      let calendarInput; // Declarar el calendario globalmente
+      let tipoConfiguracion = ""; // Variable para guardar el tipo de configuración
+    
+      // Función para inicializar el calendario
+      function inicializarCalendario() {
+        calendarInput = flatpickr("#calendar", {
+          mode: "range", // Permite seleccionar un rango de fechas
+          dateFormat: "Y-m-d", // Formato de fecha
+          onChange: function(selectedDates) {
+            console.log("Rango de fechas seleccionado: ", selectedDates);
+          }
+        });
+      }
+    
+      // Función para abrir el modal y definir el tipo de configuración
+      function abrirModal(tipo) {
+        tipoConfiguracion = tipo;
+    
+        // Cambiar el título del modal según el tipo de configuración
+        const modalTitle = document.getElementById("modalTitle");
+        modalTitle.textContent = tipo === "encendido" ? "Configurar Encendido" : "Configurar Apagado";
+    
+        // Restablecer los campos al abrir el modal
+        document.getElementById("hora").value = "";
+    
+        // Destruir y volver a inicializar el calendario
+        if (calendarInput) {
+          calendarInput.destroy();
+        }
+        inicializarCalendario();
+    
+        // Mostrar el modal
+        document.getElementById("modal-config").style.display = "block";
+      }
+    
+      // Asociar botones para abrir el modal
+      document.getElementById("programarEncendidoBtn").addEventListener("click", function() {
+        abrirModal("encendido");
+      });
+      document.getElementById("programarApagadoBtn").addEventListener("click", function() {
+        abrirModal("apagado");
+      });
+    
+      // Funcionalidad para cerrar el modal
+      document.getElementById("closeModalBtn").addEventListener("click", function() {
+        document.getElementById("modal-config").style.display = "none";
+      });
+    
+      // Guardar configuración
+      document.getElementById("guardarConfigBtn").addEventListener("click", function() {
+        const hora = document.getElementById("hora").value;
+        const rangoFechas = document.getElementById("calendar").value;
+    
+        if (!hora) {
+          alert("Por favor selecciona una hora.");
+          return;
+        }
+    
+        // Guardar en localStorage
+        if (tipoConfiguracion === "encendido") {
+          localStorage.setItem("configEncendido", JSON.stringify({ hora, rangoFechas }));
+          document.getElementById("encendidoMessage").style.display = "block";
+          document.getElementById("encendidoDetails").innerHTML = `
+            <p><strong>Hora:</strong> ${hora}</p>
+            <p><strong>Rango de fechas:</strong> ${rangoFechas || "No seleccionado"}</p>
+          `;
+        } else if (tipoConfiguracion === "apagado") {
+          localStorage.setItem("configApagado", JSON.stringify({ hora, rangoFechas }));
+          document.getElementById("apagadoMessage").style.display = "block";
+          document.getElementById("apagadoDetails").innerHTML = `
+            <p><strong>Hora:</strong> ${hora}</p>
+            <p><strong>Rango de fechas:</strong> ${rangoFechas || "No seleccionado"}</p>
+          `;
+        }
+    
+        // Ocultar el modal
+        document.getElementById("modal-config").style.display = "none";
+        console.log(`Configuración ${tipoConfiguracion} guardada: Hora - ${hora}, Rango de fechas - ${rangoFechas || "No seleccionado"}`);
+      });
+    
+      // Eliminar configuraciones
+      document.getElementById("eliminarEncendidoBtn").addEventListener("click", function() {
+        localStorage.removeItem("configEncendido");
+        document.getElementById("encendidoMessage").style.display = "none";
+        document.getElementById("encendidoDetails").innerHTML = "";
+        console.log("Configuración de encendido eliminada.");
+      });
+    
+      document.getElementById("eliminarApagadoBtn").addEventListener("click", function() {
+        localStorage.removeItem("configApagado");
+        document.getElementById("apagadoMessage").style.display = "none";
+        document.getElementById("apagadoDetails").innerHTML = "";
+        console.log("Configuración de apagado eliminada.");
+      });
+    
+      // Recuperar configuración al cargar la página
+      window.addEventListener('load', function() {
+        // Recuperar configuración de encendido
+        const configEncendido = JSON.parse(localStorage.getItem("configEncendido"));
+        if (configEncendido) {
+          document.getElementById("encendidoMessage").style.display = "block";
+          document.getElementById("encendidoDetails").innerHTML = `
+            <p><strong>Hora:</strong> ${configEncendido.hora}</p>
+            <p><strong>Rango de fechas:</strong> ${configEncendido.rangoFechas || "No seleccionado"}</p>
+          `;
+        }
+    
+        // Recuperar configuración de apagado
+        const configApagado = JSON.parse(localStorage.getItem("configApagado"));
+        if (configApagado) {
+          document.getElementById("apagadoMessage").style.display = "block";
+          document.getElementById("apagadoDetails").innerHTML = `
+            <p><strong>Hora:</strong> ${configApagado.hora}</p>
+            <p><strong>Rango de fechas:</strong> ${configApagado.rangoFechas || "No seleccionado"}</p>
+          `;
+        }
+      });
+    
+      // Inicializar el calendario al cargar la página
+      inicializarCalendario();
+    </script>
+    
+    
+<!-- Sección Ventiladores -->
+<section class="card">
+  <div class="card-header">
+    <h2>VENTILADORES</h2>
+    <label class="switch">
+      <input type="checkbox" id="ventiladoresSwitch">
+      <span class="slider"></span>
+    </label>
+
+    <span class="switch-label" id="switchLabel"></span>
+  </div>
+  <p>Activa o desactiva los ventiladores.</p>
+  <h3>Configuración</h3>
+  <div class="schedule">
+    <button class="btn" id="programarEncendidoVentiladorBtn">Programar Encendido</button>
+    <button class="btn" id="programarApagadoVentiladorBtn">Programar Apagado</button>
+  </div>
+</div>
+
+<!-- Modal de configuración -->
+<div class="modal" id="modal-config-ventiladores">
+  <div class="modal-content">
+    <h3>Configurar Hora</h3>
+    <label for="hora-ventiladores">Hora:</label>
+    <input type="time" id="hora-ventiladores">
+    <div class="modal-footer">
+      <button class="btn" id="guardarConfigVentiladoresBtn">Guardar Configuración</button>
+      <button class="btn" id="closeModalVentiladoresBtn">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+    </section>
+
+  </main>
+  
+  <div class="mostrar "> <button class="btnmostrar" id="mostrarhisto">Mostrar</button> </div>
+  
+  <main2 class="container" style="display: none;" id="registros-container">
+    <div>
+      <label for="fechaInicio">Fecha de inicio:</label>
+      <input type="datetime-local" id="fechaInicio">
+      
+      <label for="fechaFin">Fecha de fin:</label>
+      <input type="datetime-local" id="fechaFin">
+      
+      <label for="tipoDispositivo">Tipo de Dispositivo:</label>
+      <select id="tipoDispositivo">
+        <option value="">Todos</option>
+        <option value="ventilador">Ventilador</option>
+        <option value="luces">Luces</option>
+      </select>
+      
+      <!-- Botón para actualizar la tabla -->
+      <button id="buscarBtn">Buscar</button>
+      
+      <br><br>
+      <br>
+      <table id="tablaHistorial" border="1">
+  
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="registros"></tbody>
+      </table>
+    </div>
+  </main2>
+  
+  <footer class="footer">
+    <p> Sahagún - Córdoba <br>© 2024 Control IoT. <br>Todos los derechos reservados. <br> ©Myller Montesino - Jesith
+      Otero - Mario Arroyo - Elder Urzola</p>
+  </footer>
+  
+
+</div>
+  <script type="module" src="/js/firebaseConfig.js"></script>
+  <script type="module" src="/js/ledControl.js"></script>
+  <script src="js/script.js"></script>
+  <script type="module" src="js/botonluces.js"></script>
+  <script type="module" src="js/progLuz.js"></script>
+  <script type="module" src="js/progVenti.js"></script>
+
+</body>
+</html>
